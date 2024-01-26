@@ -1,0 +1,5 @@
+class ComponentGroup(Core.Component):
+    def __init__(self, agent, model, #AnyAttribute):
+        super().__init__(agent, model)
+        #SelfAnyAttribute
+

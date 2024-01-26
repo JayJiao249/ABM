@@ -1,0 +1,1 @@
+self.add_component(#Component_name(self, model, #Parameters ))

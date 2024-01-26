@@ -1,0 +1,53 @@
+class ModelName(Core.Model):
+    def __init__(self, size: int, #ModelParameters, seed: int = None):
+        super().__init__(seed=seed)
+        self.iteration = 0
+        self.time_sleep = 0
+        self.paused = False
+        self.isRunning = False
+        self.iteration_index = []
+        # last IDs
+
+        # re-initialization parameters
+        # Model Name
+
+    # Create Grid World
+        self.environment = GridWorld(self, size, size)
+
+    # Add Systems
+        self.systems.add_system(Recorder("recorder", self, ))
+
+    # Add Agent Components
+
+    # Add Class Components
+
+    # Create Agents At Random Locations
+
+    # Clears All Agents All Class Components:
+    def clear(self):
+        for agent in self.environment.get_agents():
+            self.environment.removeAgent(agent.id)
+        for agent in agent_class_components:
+            for component in agent[1]:
+                string_code = f"{agent[0]}.remove_class_component({component})"
+                exec(string_code)
+
+    # Method that will execute Model for t time steps
+    def run(self, t: int):
+        t += self.iteration
+        self.isRunning = True
+        while self.iteration < t:
+            if not self.paused:
+                self.execute(1)
+                self.iteration += 1
+                if self.iteration_index == []:
+                    self.iteration_index = [1]
+                else:
+                    self.iteration_index.append(self.iteration_index[-1]+1)
+                time.sleep(self.time_sleep)
+                yield self
+            else:
+                pass
+        self.isRunning = False
+
+

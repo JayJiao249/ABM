@@ -1,0 +1,4 @@
+        # Count #agent_name_upper
+        self.records[#agent_name].append(
+            len(self.model.environment.get_agents(tag=Tags.#agent_tag))
+        )

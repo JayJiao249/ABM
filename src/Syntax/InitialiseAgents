@@ -1,0 +1,2 @@
+        for _ in range(init_agent):
+            self.environment.add_agent(Agent(self), x_pos=self.random.randint(0, size - 1), y_pos=self.random.randint(0, size - 1))

@@ -1,0 +1,11 @@
+class AgentGroup(Core.Agent):
+    def __init__(self, model, #AnyAttribute):
+        #SelfAnyAttribute
+        agent_comp = AgentGroup[AgentComponent]
+        self.agent_id = f'{agent_comp.prefix}{agent_comp.counter}'
+        super().__init__(self.agent_id, model, tag=Tags.AgentTag)
+        #ListOfComponentsToAdd
+        agent_comp.counter += 1
+        for item in self.model.agent_last_id:
+            if item[0] == 'AgentGroup':
+                item[1] = agent_comp.counter

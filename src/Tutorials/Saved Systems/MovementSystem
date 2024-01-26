@@ -1,0 +1,14 @@
+class MovementSystem(Core.System):
+    def __init__(self, id: str, model):
+        super().__init__(id, model)
+
+    def execute(self):
+        # For each agent in the environment
+        for agent in self.model.environment:
+            # Move within Moore Neighbourhood [-1, 1]
+            x_offset = round(2 * self.model.random.random() - 1)
+            y_offset = round(2 * self.model.random.random() - 1)
+            self.model.environment.move(agent, x_offset, y_offset)
+
+            # Spend Energy
+            agent[EnergyComponent].energy -= 1

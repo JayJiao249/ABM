@@ -1,0 +1,26 @@
+class BirthSystem(Core.System):
+    def __init__(self, id, model):
+        super().__init__(id, model)
+
+    def execute(self):
+        for agent in self.model.environment.get_agents():
+            new_agent = None
+            if agent.tag == Tags.WOLF and self.model.random.random() < Wolf[SpeciesComponent].reproduce_rate:
+                # Birth Wolf
+                agent[EnergyComponent].energy /= 2.0
+                new_agent = Wolf(self.model,
+                                 energy=agent[EnergyComponent].energy
+                                 )
+
+            elif self.model.random.random() < Sheep[SpeciesComponent].reproduce_rate:
+                # Birth Sheep
+                agent[EnergyComponent].energy /= 2.0
+                new_agent = Sheep(self.model,
+                                  energy=agent[EnergyComponent].energy
+                                  )
+
+            # Add agent to environment (at its parent's location)
+            if new_agent is not None:
+                self.model.environment.add_agent(
+                    new_agent, *agent[PositionComponent].xy()
+                )

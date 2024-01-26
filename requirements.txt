@@ -1,0 +1,7 @@
+Cython
+deprecated
+numpy
+pandas
+PyQT6
+matplotlib
+ECAgent

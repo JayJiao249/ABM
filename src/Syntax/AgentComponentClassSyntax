@@ -1,0 +1,6 @@
+# To define the prefix for assigning ID to an agent and the current ID number available
+class AgentComponent(Core.Component):
+    def __init__(self, agent, model, prefix):
+        super().__init__(agent, model)
+        self.prefix = prefix
+        self.counter = 0

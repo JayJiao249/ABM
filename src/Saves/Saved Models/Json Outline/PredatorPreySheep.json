@@ -1,0 +1,148 @@
+[
+    {
+        "WriteAgent": {
+            "agent_name": "Sheep",
+            "parameters": [
+                [
+                    "energy",
+                    "float = None"
+                ]
+            ],
+            "fields": [],
+            "components": [
+                [
+                    "EnergyComponent",
+                    [
+                        [
+                            "energy",
+                            "energy if energy is not None else model.random.random() * 2 * Wolf[SpeciesComponent].gain"
+                        ]
+                    ]
+                ]
+            ]
+        }
+    },
+    {
+        "WriteAgent": {
+            "agent_name": "Wolf",
+            "parameters": [
+                [
+                    "energy",
+                    "float = None"
+                ]
+            ],
+            "fields": [],
+            "components": [
+                [
+                    "EnergyComponent",
+                    [
+                        [
+                            "energy",
+                            "energy if energy is not None else model.random.random() * 2 * Wolf[SpeciesComponent].gain"
+                        ]
+                    ]
+                ]
+            ]
+        }
+    },
+    {
+        "WriteComponent": {
+            "component_name": "EnergyComponent",
+            "parameters": [
+                [
+                    "energy",
+                    "float"
+                ]
+            ],
+            "fields": [
+                [
+                    "energy",
+                    "Self"
+                ]
+            ]
+        }
+    },
+    {
+        "WriteComponent": {
+            "component_name": "SpeciesComponent",
+            "parameters": [
+                [
+                    "gain",
+                    "int"
+                ],
+                [
+                    "reproduce_rate",
+                    "float"
+                ]
+            ],
+            "fields": [
+                [
+                    "gain",
+                    "Self"
+                ],
+                [
+                    "reproduce_rate",
+                    "Self"
+                ]
+            ]
+        }
+    },
+    {
+        "WriteSystem": {
+            "BirthSystem": {
+                "parameters": []
+            },
+            "DeathSystem": {
+                "parameters": []
+            },
+            "ResourceConsumptionSystem": {
+                "parameters": [
+                    [
+                        "regrow_time",
+                        "int"
+                    ]
+                ]
+            },
+            "MovementSystem": {
+                "parameters": []
+            }
+        }
+    },
+    {
+        "WriteModel": {
+            "model_name": "PredatorPreySheep",
+            "add_class_component": [
+                [
+                    {
+                        "AgentName": "Sheep",
+                        "ComponentName": "SpeciesComponent"
+                    },
+                    {
+                        "AgentName": "Wolf",
+                        "ComponentName": "SpeciesComponent"
+                    }
+                ]
+            ],
+            "system": {
+                "systems": [
+                    "BirthSystem",
+                    "DeathSystem",
+                    "ResourceConsumptionSystem",
+                    "MovementSystem"
+                ],
+                "custom_name": [
+                    "birth",
+                    "death",
+                    "food",
+                    "move"
+                ]
+            },
+            "write_agent_to_system": {
+                "agents": [
+                    "Wolf",
+                    "Sheep"
+                ]
+            }
+        }
+    }
+]

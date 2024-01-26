@@ -1,0 +1,12 @@
+class DeathSystem(Core.System):
+    def __init__(self, id, model):
+        super().__init__(id, model)
+
+    def execute(self):
+        toRem = []
+        for agent in self.model.environment:
+            if agent[EnergyComponent].energy <= 0:
+                toRem.append(agent.id)
+
+        for a in toRem:
+            self.model.environment.remove_agent(a)

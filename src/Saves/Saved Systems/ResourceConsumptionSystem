@@ -1,0 +1,74 @@
+class ResourceConsumptionSystem(Core.System):
+    def __init__(self, id: str, model, regrow_time: int):
+        super().__init__(id, model)
+        self.regrow_time = regrow_time
+
+        def resource_generator(pos, cells):
+            return 1 if model.random.random() < 0.5 else 0
+
+        # Generate the initial resources
+        model.environment.add_cell_component('resources',
+                                             resource_generator)
+
+        def countdown_generator(pos, cells):
+            return int(model.random.random() * regrow_time)
+
+        # Generate the initial resources
+        model.environment.add_cell_component('countdown', countdown_generator)
+
+    def execute(self):
+        # Get resources data
+        cells = self.model.environment.cells
+        resource_cells = cells['resources'].to_numpy()
+        countdown_cells = cells['countdown'].to_numpy()
+        eaten_sheep = []
+        targets_at_pos = {}
+        environment = self.model.environment
+        # Process Sheep and Wolves first
+
+        for agent in environment:
+            posID = discrete_grid_pos_to_id(agent[PositionComponent].x, agent[PositionComponent].y,
+                                            self.model.environment.width)
+
+            # Is wolf or is sheep
+            if agent.tag == Tags.WOLF:
+                # Get all agents at position
+                if posID not in targets_at_pos:
+                    targets_at_pos[posID] = environment.get_agents_at(
+                        agent[PositionComponent].x, agent[PositionComponent].y)
+
+                for target in targets_at_pos[posID]:
+                    # If sheep
+                    if target.tag == Tags.SHEEP and target.id not in eaten_sheep:
+                        # Mark Sheep for death
+                        eaten_sheep.append(target.id)
+                        # Wolf gets energy for eating Sheep
+                        agent[EnergyComponent].energy += Wolf[SpeciesComponent].gain
+                        break
+
+            elif agent.id not in eaten_sheep:
+                # Check is grass is Alive
+                if resource_cells[posID] > 0:
+                    # Sheep consumes Grass and gains Energy
+                    agent[EnergyComponent].energy += Sheep[SpeciesComponent].gain
+                    resource_cells[posID] = 0
+
+        # Remove eaten sheep
+        for sheep in eaten_sheep:
+            environment.remove_agent(sheep)
+
+        # Regrow Grass
+        countdown_cells[resource_cells < 1] -= 1
+        mask = countdown_cells < 1
+        resource_cells[mask] = 1
+        countdown_cells = numpy.where(mask, numpy.asarray(
+            [
+                int(self.model.random.random() * self.regrow_time)
+                for _ in range(len(countdown_cells))
+            ]), countdown_cells)
+
+        # Update grass levels and countdowns in environment
+        self.model.environment.cells.update({
+            'resources': resource_cells,
+            'countdown': countdown_cells
+        })

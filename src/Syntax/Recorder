@@ -1,0 +1,45 @@
+class Recorder(Core.System):
+    def __init__(self, id, model):
+        super().__init__(id, model)
+        self.agents = []
+        for agent in self.model.agent_last_id:
+            self.agents.append(agent[0])
+        self.agent_population = []
+        self.initialise_data()
+        self.agent_locations = []
+        self.x_vals = []
+
+    def initialise_data(self):
+        for agent_name in self.agents:
+            self.agent_population.append([agent_name, []])
+
+    def execute(self):
+        for population in self.agent_population:
+            population[1].append(
+                len(self.model.environment.get_agents(tag=Tags.__getattr__(population[0].upper()))))
+        self.x_vals.append(self.model.iteration)
+
+        for agent_name in self.agents:
+            self.agent_locations.append([agent_name, [], []])
+
+        visited_locations = {}
+
+        for location in self.agent_locations:
+            agent_type = location[0]
+
+            # Check if this agent type has been visited before
+            if agent_type not in visited_locations:
+                visited_locations[agent_type] = set()
+
+            for lone_agent in self.model.environment.get_agents(tag=Tags.__getattr__(agent_type.upper())):
+                # Get the agent's position
+                x = lone_agent[PositionComponent].x
+                y = lone_agent[PositionComponent].y
+
+                # Check if this location has been visited for this agent type
+                if (x, y) not in visited_locations[agent_type]:
+                    location[1].append(x)
+                    location[2].append(y)
+
+                    # Mark this location as visited for this agent type
+                    visited_locations[agent_type].add((x, y))
